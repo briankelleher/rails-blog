@@ -80,7 +80,7 @@ User.create(
 )
 ```
 
-This will create a basic test user, so you can log in and test user relationships.
+Running `db:seed` will create a basic test user, so you can log in and test user relationships.
 
 Next, we will want to add the user-post author relationship.  We first have to set up a database migration to add this relationship:
 
