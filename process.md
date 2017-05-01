@@ -82,7 +82,7 @@ User.create(
 
 This will create a basic test user, so you can log in and test user relationships.
 
-Lastly, we will want to add the user-post author relationship.  We first have to set up a database migration to add this relationship:
+Next, we will want to add the user-post author relationship.  We first have to set up a database migration to add this relationship:
 
 ```bash
 rails g migration AddUserToPosts user:references
@@ -97,3 +97,5 @@ We will want to make a slight adjustment to the posts controller in order for th
 ```
 
 Instead of flat-out creating a post, this will create a post in the context of the current user (`current_user` is a built in function referencing the user currently signed in.  Since we have already set authentication up on our posts, we have guaranteed a user is logged in when they are creating a post).
+
+In order for the above to work, you will need to add a line to the User model, at `app/models/user.rb`.  Add `has_many :posts`.  This will add a backwards user-post relationship, so one could easily query for a user's posts, as well as create them for a user.
