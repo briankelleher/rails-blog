@@ -21,6 +21,11 @@
     <%= f.text_area :body %>
   </div>
 
+  <div class="field">
+      <%= f.label :category_id %>
+      <%= f.collection_select :category_id, Category.all, :id, :name %>
+  </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>

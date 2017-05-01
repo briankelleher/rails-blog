@@ -99,3 +99,34 @@ We will want to make a slight adjustment to the posts controller in order for th
 Instead of flat-out creating a post, this will create a post in the context of the current user (`current_user` is a built in function referencing the user currently signed in.  Since we have already set authentication up on our posts, we have guaranteed a user is logged in when they are creating a post).
 
 In order for the above to work, you will need to add a line to the User model, at `app/models/user.rb`.  Add `has_many :posts`.  This will add a backwards user-post relationship, so one could easily query for a user's posts, as well as create them for a user.
+
+## Categories!
+
+Once this blog gets huge and successful, you will need some categories so users can easily see relevant posts!  This will also help your sanity in post management.
+
+Lets scaffold out some categories.
+
+```bash
+rails g scaffold category name:string description:text
+```
+
+Before you run a migration, add the following to the most recently added migration file (in `db/migrate`):
+
+```ruby
+add_reference :posts, :category, foreign_key: true
+```
+
+Then, a simple `rails db:migrate` will update the database schema to support categories.
+
+To finish the category-post relationship add `has_many :posts` to `app/models/category.rb`.
+
+Run a `rails s` and open `http://localhost:3000/categories` to see the category index.  Go ahead and create a category, and we will edit the post form to have a category (`app/views/posts/_form.html.erb`).  Add the following to the post form view before the submit button:
+
+```html
+<div class="field">
+    <%= f.label :category_id %>
+    <%= f.collection_select :category_id, Category.all, :id, :name %>
+</div>
+```
+
+
