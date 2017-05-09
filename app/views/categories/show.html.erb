@@ -10,5 +10,17 @@
   <%= @category.description %>
 </p>
 
+
+<p>
+  <strong>Posts:</strong>
+  <% if @posts.length > 0 %>
+    <% @posts.each do |p| %>
+      <%= link_to p.title, p %><br>
+    <% end %>
+  <% else %>
+    No Posts.
+  <% end %>
+</p>
+
 <%= link_to 'Edit', edit_category_path(@category) %> |
 <%= link_to 'Back', categories_path %>

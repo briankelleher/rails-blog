@@ -11,6 +11,7 @@ class CategoriesController < ApplicationController
   # GET /categories/1
   # GET /categories/1.json
   def show
+    @posts = Post.where(:category => @category).limit(10).order(created_at: :desc)
   end
 
   # GET /categories/new

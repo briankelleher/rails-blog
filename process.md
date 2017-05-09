@@ -129,6 +129,16 @@ Run a `rails s` and open `http://localhost:3000/categories` to see the category 
 </div>
 ```
 
+Lastly, open up your controller `app/controllers/posts_controller.rb` and edit the bottom `post_params` function to look like the following:
+
+```ruby
+def post_params
+    params.require(:post).permit(:title, :body, :category_id)
+end
+```
+
+This will permit the category ID to be saved to the post.
+
 ## Clean Up Views
 
 Ok, so most of the conditional logic exists, now we can clean up the views a lot to show us the relevant information on each, based on logged-in status.  For purposes of the demo, I will not be committing to any UI-framework, but instead just writing the most basic outline for these views.
@@ -144,3 +154,58 @@ Open up `app/views/layouts/application.html.erb`, and add the following in betwe
     <%= link_to "Sign In", new_user_session_path %>
 <% end %>
 ```
+
+This will conditionally show a "Sign In" link for a user that is not currently signed in, and a "Logout" link for users that are currently logged in.  Lets apply this logic to the master list of posts!
+
+Open up `app/views/posts/index.html.erb`, and swap the last three <td> elements with the following:
+
+```
+<% if user_signed_in? %>
+    <td><%= link_to 'Edit', edit_post_path(post) %></td>
+    <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+<% end %>
+```
+
+Users that are not signed in will not see the "Edit" or "Destroy" options.  Lets do the same thing to categories.  Open `app/views/categories/index.html.erb`:
+
+```
+<% if user_signed_in? %>
+    <td><%= link_to 'Edit', edit_category_path(category) %></td>
+    <td><%= link_to 'Destroy', category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+<% end %>
+```
+
+Great!  Now we are showing appropriate links based on the logged-in status of a user.
+
+## Category Archive
+
+So, lets build a simple category archive.  We already have a single category view configured with the appropriate permissions.  Now lets modify our controller to pull in posts with that category.  In this case, we will pull the last 10, but in a normal production app, you would want to figure out some sort of pagination here (whether it be ajax-y, an addition to the route, etc).
+
+Open `app/controllers/categories_controller.rb`, and add the following to the `show` function:
+
+```ruby
+@posts = Post.where(:category => @category).limit(10).order(created_at: :desc)
+```
+
+This will expose a list of maximum 10 posts, ordered by the most recent first, that are all part of the current category.  A basic archive is starting to be born!
+
+Then, open `app/views/categories/show.html.erb`, and add the following below the description field:
+
+```html
+<p>
+  <strong>Posts:</strong>
+  <% if @posts.length > 0 %>
+    <% @posts.each do |p| %>
+      <%= link_to p.title, p %><br>
+    <% end %>
+  <% else %>
+    No Posts.
+  <% end %>
+</p>
+```
+
+Bam!  You now have category posts showing on the category show page.
+
+## Wrapping Up
+
+This is as far as the tutorial goes right now.  There is plenty more that can (and hopefully will) be added to this project in the future, to better serve an admin-only blog.  Feel free to submit a pull request or add issues for features!
