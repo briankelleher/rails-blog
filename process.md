@@ -206,6 +206,12 @@ Then, open `app/views/categories/show.html.erb`, and add the following below the
 
 Bam!  You now have category posts showing on the category show page.
 
+## Important Note & JSON
+
+So, if you haven't noticed already by poking around the files, there are JSON equivalents for the controller functions that show data, such as the index and show functions.  There is also support for create/update in JSON, but we won't be concerned with that right now.
+
+Test it out.  Open up `http://localhost:3000/posts.json`.  Essentially add `.json` to any route, and see if there is a JSON equivalent.  You will notice that `http://localhost:3000/categories/1.json` does not list our posts, so it is sometimes necessary to alter the JSON views after editing the main HTML views.
+
 ## Wrapping Up
 
 This is as far as the tutorial goes right now.  There is plenty more that can (and hopefully will) be added to this project in the future, to better serve an admin-only blog.  Feel free to submit a pull request or add issues for features!
